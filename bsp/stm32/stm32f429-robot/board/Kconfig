@@ -47,9 +47,19 @@ menu "Onboard Peripheral Drivers"
         default n
 		
 	config BSP_USING_MCP4725
-		bool "Enable MCP4725 (i2c2)"
+		bool "Enable MCP4725"
 		select BSP_USING_I2C2
-	
+		select BSP_USING_I2C3
+		default n
+		
+		
+	config BSP_USING_PULSE_ENCODER
+        bool "Enable Encoder"
+        default n
+        select RT_USING_PULSE_ENCODER
+		select BSP_USING_PULSE_ENCODER1
+		select BSP_USING_PULSE_ENCODER2
+		
     
     config PHY_USING_LAN8720A
         bool
@@ -211,24 +221,58 @@ menu "On-chip Peripheral Drivers"
                 default 23
         endif
 	
-	 menuconfig BSP_USING_I2C2
+
+	
+	menuconfig BSP_USING_I2C2
         bool "Enable I2C2 BUS (software simulation)"
         default n
         select RT_USING_I2C
         select RT_USING_I2C_BITOPS
         select RT_USING_PIN
         if BSP_USING_I2C2
-            comment "Notice: PB8 --> 24; PB9 --> 25" 
+            comment "Notice: PH4 --> 84; PH5 --> 85" 
             config BSP_I2C2_SCL_PIN
                 int "I2C2 scl pin number"
                 range 1 176
-                default 24
+                default 84
             config BSP_I2C2_SDA_PIN
                 int "I2C2 sda pin number"
                 range 1 176
-                default 25
+                default 85
         endif
 	
+	menuconfig BSP_USING_I2C3
+        bool "Enable I2C3 BUS (software simulation)"
+        default n
+        select RT_USING_I2C
+        select RT_USING_I2C_BITOPS
+        select RT_USING_PIN
+        if BSP_USING_I2C3
+            comment "Notice: PD5 --> 53; PD6 --> 54" 
+            config BSP_I2C3_SCL_PIN
+                int "I2C3 scl pin number"
+                range 1 176
+                default 53
+            config BSP_I2C3_SDA_PIN
+                int "I2C3 sda pin number"
+                range 1 176
+                default 54
+        endif
+
+	
+	
+	config BSP_USING_PULSE_ENCODER1
+		bool "Enable encoder1"
+		default n
+		select RT_USING_PULSE_ENCODER
+		
+	
+	config BSP_USING_PULSE_ENCODER2
+		bool "Enable encoder2"
+		default n
+		select RT_USING_PULSE_ENCODER
+
+ 
     menuconfig BSP_USING_ONCHIP_RTC
         bool "Enable RTC"
         select RT_USING_RTC

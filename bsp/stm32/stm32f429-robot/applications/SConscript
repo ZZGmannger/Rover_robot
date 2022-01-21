@@ -4,7 +4,7 @@ from building import *
 cwd     = GetCurrentDir()
 CPPPATH = [cwd, str(Dir('#'))]
 src     = Split("""
-main.c
+main.c motion_control_app.c  pose_est_app.c emotor_app.c  comm_app.c power_manage_app.c mcp4725.c 
 """)
 
 group = DefineGroup('Applications', src, depend = [''], CPPPATH = CPPPATH)

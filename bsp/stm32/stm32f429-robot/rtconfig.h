@@ -123,7 +123,8 @@
 
 /* POSIX layer and C standard library */
 
-#define RT_LIBC_USING_TIME
+#define RT_USING_LIBC
+#define RT_USING_POSIX
 
 /* Network */
 
@@ -184,6 +185,25 @@
 
 /* Utilities */
 
+#define RT_USING_ULOG
+#define ULOG_OUTPUT_LVL_D
+#define ULOG_OUTPUT_LVL 7
+#define ULOG_ASSERT_ENABLE
+#define ULOG_LINE_BUF_SIZE 128
+#define ULOG_USING_ASYNC_OUTPUT
+#define ULOG_ASYNC_OUTPUT_BUF_SIZE 2048
+#define ULOG_ASYNC_OUTPUT_BY_THREAD
+#define ULOG_ASYNC_OUTPUT_THREAD_STACK 1024
+#define ULOG_ASYNC_OUTPUT_THREAD_PRIORITY 30
+
+/* log format */
+
+#define ULOG_OUTPUT_FLOAT
+#define ULOG_USING_COLOR
+#define ULOG_OUTPUT_TIME
+#define ULOG_OUTPUT_LEVEL
+#define ULOG_OUTPUT_TAG
+#define ULOG_BACKEND_USING_CONSOLE
 
 /* RT-Thread online packages */
 
@@ -270,6 +290,8 @@
 #define BSP_USING_SDRAM
 #define BSP_USING_SPI_FLASH
 #define BSP_USING_MPU6050
+#define BSP_USING_MCP4725
+#define BSP_USING_PULSE_ENCODER
 #define PHY_USING_LAN8720A
 #define BSP_USING_ETH
 #define BSP_USING_SDCARD
@@ -290,10 +312,18 @@
 #define BSP_I2C1_SDA_PIN 23
 #define BSP_USING_I2C2
 
-/* Notice: PB8 --> 24; PB9 --> 25 */
+/* Notice: PH4 --> 84; PH5 --> 85 */
 
-#define BSP_I2C2_SCL_PIN 24
-#define BSP_I2C2_SDA_PIN 25
+#define BSP_I2C2_SCL_PIN 116
+#define BSP_I2C2_SDA_PIN 117
+#define BSP_USING_I2C3
+
+/* Notice: PD5 --> 53; PD6 --> 54 */
+
+#define BSP_I2C3_SCL_PIN 53
+#define BSP_I2C3_SDA_PIN 54
+#define BSP_USING_PULSE_ENCODER1
+#define BSP_USING_PULSE_ENCODER2
 #define BSP_USING_SDIO
 #define BSP_USING_FMC
 

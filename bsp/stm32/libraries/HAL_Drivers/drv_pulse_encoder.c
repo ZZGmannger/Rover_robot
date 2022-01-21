@@ -22,7 +22,7 @@
     /* this driver can be disabled at menuconfig → RT-Thread Components → Device Drivers */
 #endif
 
-#define AUTO_RELOAD_VALUE 0x7FFF
+#define AUTO_RELOAD_VALUE  0x7FFF
 
 enum
 {
@@ -226,9 +226,9 @@ void pulse_encoder_update_isr(struct stm32_pulse_encoder_device *device)
 
 #ifdef BSP_USING_PULSE_ENCODER1
 #if defined(SOC_SERIES_STM32F4)
-void TIM1_UP_TIM10_IRQHandler(void)
+void BSP_ENCODER1_TIM_IRQ_HANDLE(void)
 #elif defined(SOC_SERIES_STM32F1)
-void TIM1_UP_IRQHandler(void)
+void BSP_ENCODER1_TIM_IRQ_HANDLE(void)
 #else
     #error "Please check TIM1's IRQHandler"
 #endif
@@ -241,7 +241,7 @@ void TIM1_UP_IRQHandler(void)
 }
 #endif
 #ifdef BSP_USING_PULSE_ENCODER2
-void TIM2_IRQHandler(void)
+void BSP_ENCODER2_TIM_IRQ_HANDLE(void)
 {
     /* enter interrupt */
     rt_interrupt_enter();
@@ -251,7 +251,7 @@ void TIM2_IRQHandler(void)
 }
 #endif
 #ifdef BSP_USING_PULSE_ENCODER3
-void TIM3_IRQHandler(void)
+void BSP_ENCODER3_TIM_IRQ_HANDLE(void)
 {
     /* enter interrupt */
     rt_interrupt_enter();
@@ -261,7 +261,7 @@ void TIM3_IRQHandler(void)
 }
 #endif
 #ifdef BSP_USING_PULSE_ENCODER4
-void TIM4_IRQHandler(void)
+void BSP_ENCODER4_TIM_IRQ_HANDLE(void)
 {
     /* enter interrupt */
     rt_interrupt_enter();
