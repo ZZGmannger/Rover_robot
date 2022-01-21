@@ -186,11 +186,11 @@ void pose_init(void)
 	// atan2 outputs the value of -¦Ð to ¦Ð (radians) - see http://en.wikipedia.org/wiki/Atan2
 	// It is then converted from radians to degrees
 #ifdef RESTRICT_PITCH // Eq. 25 and 26
-	double roll  = atan2(acc_y, acc_z) * RAD_TO_DEG;
-	double pitch = atan(-acc_x / sqrt(acc_y * acc_y + acc_z * acc_z)) * RAD_TO_DEG;
+	float roll  = atan2(acc_y, acc_z) * RAD_TO_DEG;
+	float pitch = atan(-acc_x / sqrt(acc_y * acc_y + acc_z * acc_z)) * RAD_TO_DEG;
 #else // Eq. 28 and 29
-	double roll  = atan(accY / sqrt(accX * accX + accZ * accZ)) * RAD_TO_DEG;
-	double pitch = atan2(-accX, accZ) * RAD_TO_DEG;
+	float roll  = atan(accY / sqrt(accX * accX + accZ * accZ)) * RAD_TO_DEG;
+	float pitch = atan2(-accX, accZ) * RAD_TO_DEG;
 #endif
 
 	kalman_set_angle(&kalman_x , roll);
@@ -234,22 +234,23 @@ void pose_update_entry(void* param)
 		gyro_y = (int16_t)gyro.y;
 		gyro_z = (int16_t)gyro.z;
 
-		double dt = (double)(rt_tick_get() - timer) / 1000; // Calculate delta time
+		float dt = (float)(rt_tick_get() - timer) / 1000; // Calculate delta time
 		timer = rt_tick_get();
 
 		// Source: http://www.freescale.com/files/sensors/doc/app_note/AN3461.pdf eq. 25 and eq. 26
 		// atan2 outputs the value of -¦Ð to ¦Ð (radians) - see http://en.wikipedia.org/wiki/Atan2
 		// It is then converted from radians to degrees
 		#ifdef RESTRICT_PITCH // Eq. 25 and 26
-		double roll  = atan2(acc_y, acc_z) * RAD_TO_DEG;
-		double pitch = atan(-acc_x / sqrt(acc_y * acc_y + acc_z * acc_z)) * RAD_TO_DEG;
+		float roll  = atan2(acc_y, acc_z) * RAD_TO_DEG;
+		float pitch = atan(-acc_x / sqrt(acc_y * acc_y + acc_z * acc_z)) * RAD_TO_DEG;
 		#else // Eq. 28 and 29
-		double roll  = atan(acc_y / sqrt(acc_x * acc_X + acc_z * acc_z)) * RAD_TO_DEG;
-		double pitch = atan2(-acc_x, acc_z) * RAD_TO_DEG;
+		float roll  = atan(acc_y / sqrt(acc_x * acc_X + acc_z * acc_z)) * RAD_TO_DEG;
+		float pitch = atan2(-acc_x, acc_z) * RAD_TO_DEG;
 		#endif
 
-		double gyro_x_rate = gyro_x / 131.0; // Convert to deg/s
-		double gyro_y_rate = gyro_y / 131.0; // Convert to deg/s
+		float gyro_x_rate = (gyro_x / 131.0)+0.02; // Convert to deg/s
+		float gyro_y_rate = (gyro_y / 131.0) -0.1; // Convert to deg/s
+		float gyro_z_rate = (gyro_z / 131.0)+0.09 ; // Convert to deg/s
 
 		#ifdef RESTRICT_PITCH
 		// This fixes the transition problem when the accelerometer angle jumps between -180 and 180 degrees
@@ -314,7 +315,8 @@ void pose_update_entry(void* param)
 		}
  
 		LOG_D("X  (%f\t%f\t%f\t%f)", roll ,gyro_x_angle , comp_angle_x , kal_angle_x);  
-		LOG_D("Y  (%f\t%f\t%f\t%f)\r\n", pitch ,gyro_y_angle,comp_angle_y , kal_angle_y);  
+		LOG_D("Y  (%f\t%f\t%f\t%f)", pitch ,gyro_y_angle,comp_angle_y , kal_angle_y); 
+		LOG_D("R  (%f\t%f\t%f)\r\n", gyro_x_rate , gyro_y_rate , gyro_z_rate); 
  		
 		rt_thread_mdelay(10);
 
