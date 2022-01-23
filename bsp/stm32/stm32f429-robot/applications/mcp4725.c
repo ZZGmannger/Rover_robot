@@ -61,34 +61,32 @@ int8_t mcp4725_set_voltage(mcp4725_t* dev , uint16_t val, bool write_eeprom)
     }
 }
 
-static void mcp4725_probe(int argc, char **argv)
+
+/* defined the LED0 pin: PH12 */
+#define DIR1_PIN    GET_PIN(B, 12)
+#define DIR2_PIN    GET_PIN(B, 13)
+
+
+static void mcp4725_init(void)
 {
-	rt_int8_t ret;
-	if(argc == 3)
-	{
-		if(atoi(argv[1]) == 0)
-		{
-			ret = mcp4725_register(&mcp4725_left,  argv[2]);
-		}
-		else
-		{
-			ret = mcp4725_register(&mcp4725_right,  argv[2]);
-		}
-		if(ret != RT_EOK)
-		{
-			LOG_E("mcp4725 probe failed");
-			return;
-		}
-		LOG_I("mcp4725 %s probe %s ok" ,argv[1] , argv[2]);
-	}
+	rt_pin_mode(DIR1_PIN, PIN_MODE_OUTPUT);
+	rt_pin_write(DIR1_PIN , 0);
+	mcp4725_register(&mcp4725_left,  "i2c2");
+	mcp4725_set_voltage(&mcp4725_left , 0 , 1);
+
+	rt_pin_mode(DIR2_PIN, PIN_MODE_OUTPUT);
+	rt_pin_write(DIR2_PIN , 1);
+	mcp4725_register(&mcp4725_right,  "i2c3");
+	mcp4725_set_voltage(&mcp4725_right , 0 , 1);
+		
 }
 #ifdef FINSH_USING_MSH
-MSH_CMD_EXPORT(mcp4725_probe,  param: dev 0 1| name bus);
+MSH_CMD_EXPORT(mcp4725_init,  mcp4725 init);
 #endif
 
 static void mcp4725_set_value(int argc, char **argv)
 {
-	rt_uint16_t val;
+	rt_int16_t val;
 	rt_uint8_t eeprom = 0;
 		
 	if(argc == 3 || argc == 4)
@@ -105,6 +103,15 @@ static void mcp4725_set_value(int argc, char **argv)
 				LOG_W("Please probe mcp4725 first");
 				return;
 			}
+			if(val < 0)
+			{
+				rt_pin_write(DIR1_PIN , 1);
+				val = -val;
+			}
+			else
+			{
+				rt_pin_write(DIR1_PIN , 0);
+			}
 			mcp4725_set_voltage(&mcp4725_left , val , eeprom);
 		}
 		else
@@ -113,6 +120,15 @@ static void mcp4725_set_value(int argc, char **argv)
 			{
 				LOG_W("Please probe mcp4725 first");
 				return;
+			}
+			if(val < 0)
+			{
+				rt_pin_write(DIR2_PIN , 0);
+				val = -val;
+			}
+			else
+			{
+				rt_pin_write(DIR2_PIN , 1);
 			}
 			mcp4725_set_voltage(&mcp4725_right , val , eeprom);
 		}

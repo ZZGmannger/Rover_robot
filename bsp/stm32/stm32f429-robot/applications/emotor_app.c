@@ -16,7 +16,7 @@
 #define MOTOR_LEFT_DIR_PIN      GET_PIN(G, 2)
 #define MOTOR_RIGHT_DIR_PIN     GET_PIN(G, 3)
 
-#define ENCODE_PULSE_NUM    (250*4)
+#define ENCODE_PULSE_NUM    (600*4)
 #define PULSE_DISTANCE_TRANSFORM   (100)
 
 #define ONE_PULSE_TIME   (ENCODE_PULSE_NUM/100)
@@ -148,18 +148,18 @@ MSH_CMD_EXPORT(motor_init,  motor init);
 
 void dac_output(uint8_t ch ,int16_t value)
 {
-    if(ch == 0)
-    {
-        rt_pin_write(MOTOR_LEFT_DIR_PIN, value >= 0?  PIN_HIGH:PIN_LOW);
-        //set out dac
-		mcp4725_set_voltage(&motor_left.dac ,  value , 0);
-    }
-    else
-    {
-        rt_pin_write(MOTOR_RIGHT_DIR_PIN, value >= 0?  PIN_HIGH:PIN_LOW);
-        //set out dac
-		mcp4725_set_voltage(&motor_right.dac ,  value , 0);
-    }
+//    if(ch == 0)
+//    {
+//        rt_pin_write(MOTOR_LEFT_DIR_PIN, value >= 0?  PIN_HIGH:PIN_LOW);
+//        //set out dac
+//		mcp4725_set_voltage(&motor_left.dac ,  value , 0);
+//    }
+//    else
+//    {
+//        rt_pin_write(MOTOR_RIGHT_DIR_PIN, value >= 0?  PIN_HIGH:PIN_LOW);
+//        //set out dac
+//		mcp4725_set_voltage(&motor_right.dac ,  value , 0);
+//    }
 }
 
 int16_t inc_pid(algo_pid_t* pid , int32_t real , int32_t expect)
@@ -191,9 +191,10 @@ void motor_speed_query_entry(void* param)
     {
         rt_device_read(motor_left.encode_dev, 0, &count1, 1);
         rt_device_read(motor_right.encode_dev, 0, &count2, 1);
+		count1 = -count1;
 
-        motor_left.real_speed  =  314*100*(count1 - last_cnt1)/ ENCODE_PULSE_NUM;
-        motor_right.real_speed =  314*100*(count2 - last_cnt2)/ ENCODE_PULSE_NUM;
+        motor_left.real_speed  =   100*(count1 - last_cnt1)/ ENCODE_PULSE_NUM;
+        motor_right.real_speed =   100*(count2 - last_cnt2)/ ENCODE_PULSE_NUM;
 
         LOG_I("motor_left  cnt is : %d , speed is %d  mm/s" , count1 , motor_left.real_speed);
 		LOG_I("motor_right cnt is : %d , speed is %d  mm/s" , count2 , motor_right.real_speed);
@@ -224,8 +225,8 @@ void motor_speed_update_entry(void* param)
         dac_left  += inc_pid(&motor_left.pid  , motor_left.real_speed  ,  motor_left.final_expect_speed);
         dac_right += inc_pid(&motor_right.pid , motor_right.real_speed ,  motor_right.final_expect_speed);
 
-        dac_output(0 , dac_left);
-        dac_output(1 , dac_right);
+//        dac_output(0 , dac_left);
+//        dac_output(1 , dac_right);
         rt_thread_mdelay(10);
     }
 }
