@@ -51,7 +51,7 @@ float kalman_get_angle(kalman_t* kf ,float newAngle, float newRate, float dt)
     // Discrete Kalman filter time update equations - Time Update ("Predict")
     // Update xhat - Project the state ahead
     /* Step 1 */
-	double rate = newRate - kf->bias;
+	float rate = newRate - kf->bias;
 	kf->angle += dt*  rate;
 	
 	
@@ -141,13 +141,13 @@ kalman_t kalman_y;
 rt_thread_t pose_thread;
 
 /* IMU Data */
-double acc_x, acc_y, acc_z;
-double gyro_x, gyro_y, gyro_z;
+float acc_x, acc_y, acc_z;
+float gyro_x, gyro_y, gyro_z;
 int16_t temp_raw;
 
-double gyro_x_angle, gyro_y_angle; // Angle calculate using the gyro only
-double comp_angle_x, comp_angle_y; // Calculated angle using a complementary filter
-double kal_angle_x, kal_angle_y; // Calculated angle using a Kalman filter
+float gyro_x_angle, gyro_y_angle; // Angle calculate using the gyro only
+float comp_angle_x, comp_angle_y; // Calculated angle using a complementary filter
+float kal_angle_x, kal_angle_y; // Calculated angle using a Kalman filter
 
 uint32_t timer;
 uint8_t i2cData[14]; // Buffer for I2C data
@@ -248,9 +248,9 @@ void pose_update_entry(void* param)
 		float pitch = atan2(-acc_x, acc_z) * RAD_TO_DEG;
 		#endif
 
-		float gyro_x_rate = (gyro_x / 131.0)+0.02; // Convert to deg/s
-		float gyro_y_rate = (gyro_y / 131.0) -0.1; // Convert to deg/s
-		float gyro_z_rate = (gyro_z / 131.0)+0.09 ; // Convert to deg/s
+		double gyro_x_rate = (gyro_x / 131.0)+0.02; // Convert to deg/s
+		double gyro_y_rate = (gyro_y / 131.0) -0.1; // Convert to deg/s
+		double gyro_z_rate = (gyro_z / 131.0)+0.09 ; // Convert to deg/s
 
 		#ifdef RESTRICT_PITCH
 		// This fixes the transition problem when the accelerometer angle jumps between -180 and 180 degrees

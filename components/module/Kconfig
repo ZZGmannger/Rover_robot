@@ -1,0 +1,8 @@
+menu "Module"
+
+
+config RT_USING_FSM
+    bool "Using Fsm"
+    default n
+
+endmenu

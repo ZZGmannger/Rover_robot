@@ -3,7 +3,6 @@
 #include <rtdevice.h>
 #include <board.h>
 
-
 #define DBG_TAG "mcp4725"
 #define DBG_LVL DBG_LOG
 #include <rtdbg.h>
@@ -66,7 +65,6 @@ int8_t mcp4725_set_voltage(mcp4725_t* dev , uint16_t val, bool write_eeprom)
 #define DIR1_PIN    GET_PIN(B, 12)
 #define DIR2_PIN    GET_PIN(B, 13)
 
-
 static void mcp4725_init(void)
 {
 	rt_pin_mode(DIR1_PIN, PIN_MODE_OUTPUT);
@@ -77,8 +75,7 @@ static void mcp4725_init(void)
 	rt_pin_mode(DIR2_PIN, PIN_MODE_OUTPUT);
 	rt_pin_write(DIR2_PIN , 1);
 	mcp4725_register(&mcp4725_right,  "i2c3");
-	mcp4725_set_voltage(&mcp4725_right , 0 , 1);
-		
+	mcp4725_set_voltage(&mcp4725_right , 0 , 1);	
 }
 #ifdef FINSH_USING_MSH
 MSH_CMD_EXPORT(mcp4725_init,  mcp4725 init);
@@ -133,7 +130,6 @@ static void mcp4725_set_value(int argc, char **argv)
 			mcp4725_set_voltage(&mcp4725_right , val , eeprom);
 		}
 	}
-
 }
 #ifdef FINSH_USING_MSH
 MSH_CMD_EXPORT(mcp4725_set_value,  param: dev 0 1| val 0 4095|eeprom 0 1);
